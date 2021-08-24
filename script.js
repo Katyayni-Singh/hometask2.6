@@ -15,7 +15,7 @@ form.appendChild(searchBar);
 form.appendChild(submit);
 document.getElementById('searchBox').appendChild(form);
 
-const API_KEY = "AIzaSyC1SxDHlYERTtMnG-YzfkUC5PJbSm6AzQA"; //AIzaSyBk_MUmjFVPZKFHW2NCQBR43VPXF2eehzA
+const API_KEY = "AIzaSyBk_MUmjFVPZKFHW2NCQBR43VPXF2eehzA"; //AIzaSyC1SxDHlYERTtMnG-YzfkUC5PJbSm6AzQA
 const videoList = document.getElementById('videos');
 const prevBtn =document.getElementById('pagination');
 const pagination =document.getElementById('pagination');
@@ -35,19 +35,16 @@ function paginate(e, obj) {
 async function searchAndDisplayYoutubeVideos() {
     const searchString = searchBar.value;
 
-    if (searchString != '') {
-        let arr_search = {
-            "part": 'snippet',
-            "type": 'video',
-            "maxResults": 15,
-            "q": searchString
-        };
-
-        if (pageToken != '') {
-            arr_search.pageToken = pageToken;
-        }
-       
-    const searchData = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&type=video&part=snippet&maxResults=15&q=${searchString}`);
+    let searchData ='';    
+    const homePage = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&type=video&part=snippet&maxResults=15&q=${searchString}`;
+    const nextPage = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&type=video&part=snippet&maxResults=15&q=${searchString}&pageToken=${pageToken}`;
+    if (pageToken != '') {
+         searchData = await fetch(nextPage);
+    }
+    else{
+         searchData = await fetch(homePage);
+    }
+    
 
     //This line is to convert the received data into json format to access them easily
     const searchDataInJson = await searchData.json();
@@ -56,7 +53,7 @@ async function searchAndDisplayYoutubeVideos() {
     const listItems = searchDataInJson.items;
         
                     if (listItems) {
-                        let output = ' <ul> ';
+                       let output = ' <ul> ';
                       
                         let prevNext='<ul>';
 
@@ -86,11 +83,12 @@ async function searchAndDisplayYoutubeVideos() {
 
                         if (searchDataInJson.nextPageToken) {
                             prevNext += ` <a  href="#" class="paginate" data-id="${searchDataInJson.nextPageToken}" onclick="paginate(event, this)">Next</a>`;
+                            searchDataInJson.prevPageToken = searchDataInJson.nextPageToken;
                         }
 
                         // Output list
                         videoList.innerHTML = output;
                         pagination.innerHTML= prevNext;
                     }           
-    }
+    
 }
