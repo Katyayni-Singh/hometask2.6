@@ -15,7 +15,7 @@ form.appendChild(searchBar);
 form.appendChild(submit);
 document.getElementById('searchBox').appendChild(form);
 
-const API_KEY = "AIzaSyBk_MUmjFVPZKFHW2NCQBR43VPXF2eehzA"; //AIzaSyC1SxDHlYERTtMnG-YzfkUC5PJbSm6AzQA
+const API_KEY = "AIzaSyBk_MUmjFVPZKFHW2NCQBR43VPXF2eehzA"; 
 const videoList = document.getElementById('videos');
 const prevBtn =document.getElementById('pagination');
 const pagination =document.getElementById('pagination');
